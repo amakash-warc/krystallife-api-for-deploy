@@ -1,158 +1,46 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const subSchema = require('./sub-schema-model')
-
-
-const schema = new Schema({
-    productName: {
-        type: String,
-        required: true
+const mongoose = require("mongoose");
+const Productchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is Required"],
+      minlength: 3,
+      maxlength: 50,
     },
-    productSlug: {
-        type: String,
-        required: true
-    },
-    sku: {
-        type: String,
-        required: false
-    },
-    images: [{
-        type: String,
-        required: false
-    }],
-    price: {
-        type: Number,
-        required: false
-    },
-    discountType: {
-        type: Number,
-        required: false
-    },
-    discountAmount: {
-        type: Number,
-        required: false
-    },
-    prices: [
-        subSchema.priceWithUnit
-    ],
-    inputFeild: [
-        subSchema.inputFeildsSchema
-    ],
-    // quantity: {
-    //     type: Number,
-    //     required: false
-    // },
-    // soldQuantity: {
-    //     type: Number,
-    //     required: false
-    // },
-
-    brand: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductBrand'
-    },
-    brandSlug: {
-        type: String
+    slug: {
+      type: String,
+      required: true,
     },
     category: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductCategory'
+      type: String,
+      required: true,
     },
-    categorySlug: {
-        type: String
+    weight: {
+      type: Number,
+      required: true,
     },
-    subCategory: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductSubCategory'
+    price: {
+      type: Number,
+      required: true,
     },
-    subCategorySlug: {
-        type: String
+    stock: {
+      type: Number,
+      required: true,
     },
-    generic: {
-        type: Schema.Types.ObjectId,
-        ref: 'Generic'
+    imgUrl: {
+      type: String,
+      required: true,
     },
-    genericSlug: {
-        type: String
+    shortDescription: {
+      type: String,
+      required: true,
     },
-    // attributes: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'ProductAttribute'
-    // }],
-    // filterData: [{
-    //     _id: {
-    //         type: Schema.Types.ObjectId,
-    //         ref: 'ProductAttribute'
-    //     },
-    //     attributeName: {
-    //         type: String,
-    //         required: false
-    //     },
-    //     attributeValues: {
-    //         type: String,
-    //         required: false
-    //     }
-    // }],
-    tags: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Tag'
-    }],
-    ratingReview: [{
-        type: Schema.Types.ObjectId,
-        ref: 'ProductRatingReview'
-    }],
-    // discussion: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Discussion'
-    // }],
-    // warrantyServices: {
-    //     type: String,
-    //     required: false
-    // },
-    // shortDescription: {
-    //     type: String,
-    //     required: false
-    // },
-    description: {
-        type: String,
-        required: false
+    detailedDescription: {
+      type: String,
+      required: true,
     },
-    stockVisibility: {
-        type: Boolean,
-        required: false
-    },
-    productVisibility: {
-        type: Boolean,
-        required: false
-    },
-    deliveryPolicy: {
-        type: String,
-        required: false
-    },
-    paymentPolicy: {
-        type: String,
-        required: false
-    },
-    // warrantyPolicy: {
-    //     type: String,
-    //     required: false
-    // },
-    // campaignStartDate: {
-    //     type: Date,
-    //     required: false
-    // },
-    // campaignEndDate: {
-    //     type: Date,
-    //     required: false
-    // },
-    // emiStatus: [{
-    //     type: [Number],
-    //     required: false
-    // }],
-}, {
-    versionKey: false,
-    timestamps: true
-});
+  },
+  { timestamps: true }
+);
 
-
-module.exports = mongoose.model('Product', schema);
+module.exports = mongoose.model("Product", Productchema);

@@ -1,110 +1,56 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-
-
-const userSchema = new Schema(
-    {
-        fullName: {
-            type: String,
-            required: false
-        },
-        address: {
-            type: String,
-            required: false
-        },
-        phoneNo: {
-            type: String,
-            required: false
-        },
-        email: {
-            type: String,
-            required: false
-        },
-        district: {
-            type: String,
-            required: false
-        },
-        area: {
-            type: String,
-            required: false
-        },
-        shippingAddress: {
-            type: String,
-            required: false
-        },
-        gender: {
-            type: String,
-            required: false
-        },
-        birthdate: {
-            type: Date,
-            required: false
-        },
-        username: {
-            type: String,
-            required: true
-        },
-        occupation: {
-            type: String,
-            required: false
-        },
-        profileImg: {
-            type: String
-        },
-        password: {
-            type: String,
-            required: false
-        },
-        isPhoneVerified: {
-            type: Boolean,
-            required: true
-        },
-        isEmailVerified: {
-            type: Boolean,
-            required: false
-        },
-        registrationType: {
-            type: String,
-            required: true
-        },
-        registrationAt: {
-            type: Date,
-            default: Date.now(),
-            required: true,
-        },
-        hasAccess: {
-            type: Boolean,
-            required: true
-        },
-        carts: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Cart'
-        }],
-        checkouts: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Order'
-        }],
-        prescriptionOrders: [{
-            type: Schema.Types.ObjectId,
-            ref: 'PrescriptionOrder'
-        }],
-        addresses: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Address'
-        }],
-        wishlists: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Wishlist'
-        }],
-        usedCoupons: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Coupon'
-        }],
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const UserSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is Required"],
+      minlength: 3,
+      maxlength: 50,
     },
-    {
-        timestamps: true
-    }
+    email: {
+      type: String,
+      required: [true, "Email is Required"],
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please Provide Valid Email",
+      ],
+      unique: true,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin", "superuser"],
+      default: "user",
+    },
+
+    password: {
+      type: String,
+      required: [true, "Password is Required"],
+      minlength: 6,
+    },
+  },
+  { timestamps: true }
 );
 
+UserSchema.pre("save", async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
-module.exports = mongoose.model('User', userSchema);
+UserSchema.methods.createJWT = function () {
+  return jwt.sign(
+    { userID: this._id, role: this.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
+};
+
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
+};
+
+module.exports = mongoose.model("User", UserSchema);

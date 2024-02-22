@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const subSchema = require('./sub-schema-model');
+const orderItem = require('./OrderItem');
 
 const schema = new Schema(
     {
@@ -31,7 +31,7 @@ const schema = new Schema(
         },
         shippingFee: {
             type: Number,
-            required: true
+            required: false
         },
         discount: {
             type: Number,
@@ -41,39 +41,15 @@ const schema = new Schema(
             type: Number,
             required: true
         },
-        totalAmountWithDiscount: {
-            type: Number,
-            required: true
-        },
-        deletedProduct: {
-            type: Boolean,
-            required: false
-        },
-        refundAmount: {
-            type: Number,
-            required: false
-        },
+       
         paymentMethod: {
             type: String,
             required: true
         },
-
-        paymentStatus: {
-            type: String,
-            required: true
-        },
-
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
-
+        
+        orderItems:[orderItem],
         // User Address
-        address: {
-            type: Schema.Types.ObjectId,
-            ref: 'Address',
-        },
+      
         name: {
             type: String,
             required: true
@@ -106,98 +82,6 @@ const schema = new Schema(
             type: String,
             required: false
         },
-
-        // Coupon
-        couponId: {
-            type: Schema.Types.ObjectId,
-            ref: "Coupon",
-            required: false
-        },
-        couponValue: {
-            type: Number,
-            required: false
-        },
-
-        orderTimeline: {
-            others: {
-                type: Boolean,
-                required: false
-            },
-            othersData: {
-                type: Date,
-                required: false
-            },
-            orderPlaced: {
-                type: Boolean,
-                required: false
-            },
-            orderPlacedDate: {
-                type: Date,
-                required: false
-            },
-            orderProcessing: {
-                type: Boolean,
-                required: false
-            },
-            orderProcessingDate: {
-                type: Date,
-                required: false
-            },
-            orderPickedByDeliveryMan: {
-                type: Boolean,
-                required: false
-            },
-            orderPickedByDeliveryManDate: {
-                type: Date,
-                required: false
-            },
-            orderDelivered: {
-                type: Boolean,
-                required: false
-            },
-            orderDeliveredDate: {
-                type: Date,
-                required: false
-            },
-        },
-
-        // Order Type
-        //additionalInfo:[subSchema.igInfo],
-        hasPreorderItem: {
-            type: Boolean,
-            required: false
-        },
-        orderedItems: [subSchema.orderItem],
-        orderNotes: {
-            type: String,
-            required: false
-        },
-        orderType: {
-            type: String,
-            required: false
-        },
-        images: {
-            type: [String],
-            required: false
-        },
-        sessionkey: {
-            type: String,
-            required: false
-        },
-        orderPaymentInfo: {
-            type: Schema.Types.ObjectId,
-            ref: "OrderPaymentInfo",
-            required: false
-        },
-        accountNo:{
-            type:String,
-            required:true,
-        },
-        transactionId:{
-            type:String,
-            required:true,
-        },
-        
 
     },
     {
