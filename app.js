@@ -29,10 +29,11 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const app = express();
 
 // extra packages
-app.use(bodyParser.json({ limit: '1000mb' }));
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
-app.use(heltmet());
+
+app.use(heltmet({
+  crossOriginResourcePolicy: false,
+}));
 app.use(cors());
 app.use(xss());
 app.use(
@@ -41,6 +42,9 @@ app.use(
     max: 60,
   })
 );
+app.use(express.urlencoded({extended:true}))
+app.use(bodyParser.json({ limit: '1000mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -53,7 +57,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/product", productRouter);
 
 app.use(notFoundMiddleware);
-//app.use(errorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 8080;
 

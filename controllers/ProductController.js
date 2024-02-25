@@ -6,6 +6,9 @@ const create = async (req, res) => {
 
     let data = req.body;
     console.log(data)
+    data['weight'] = Number(data['weight']);
+    data['price'] = Number(data['price']);
+    data['stock'] = Number(data['stock']);
     if(req.file){
         data['imgUrl']=`/images/product/${req.file.filename}`
     }
@@ -14,8 +17,12 @@ const create = async (req, res) => {
 };
 
 const edit = async (req, res) => {
-
+   
     let data = req.body;
+    data['weight'] = Number(data['weight']);
+    data['price'] = Number(data['price']);
+    data['stock'] = Number(data['stock']);
+    console.log(req.body);
     if(req.file){
         data['imgUrl']=`/images/product/${req.file.filename}`
     }
@@ -30,10 +37,11 @@ const edit = async (req, res) => {
 
 const destroy = async (req,res)=>{
     let id = req.params.id;
+    console.log()
     deleted = await Product.findByIdAndDelete(id);
 
     if(deleted){
-        return res.status(StatusCodes.OK).json({message: 'delete success', data: newThing});
+        return res.status(StatusCodes.OK).json({message: 'delete success', data: deleted});
     }
     return res.status(StatusCodes.NOT_FOUND).json({message:'delete failed'})
 };

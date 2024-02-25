@@ -80,7 +80,7 @@ const schema = new Schema(
         },
         shippingAddress: {
             type: String,
-            required: false
+            required: true
         },
 
     },

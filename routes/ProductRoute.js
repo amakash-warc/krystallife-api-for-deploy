@@ -23,6 +23,6 @@ const storage = multer.diskStorage({
     limits: { fileSize: 10000000 }, // Limit file size to 10MB
   }).single("img");
 
-router.route('/').get(getaAll).post(authenticateUser,upload,create).put(authenticateUser,upload,edit).delete(authenticateUser,destroy);
-
+router.route('/').get(getaAll).post(authenticateUser,upload,create).put(authenticateUser,upload,edit);
+router.delete('/:id',authenticateUser,destroy)
 module.exports = router;
