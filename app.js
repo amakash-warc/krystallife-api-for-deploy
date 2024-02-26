@@ -2,7 +2,7 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 
 //extra security packages
 const heltmet = require("helmet");
@@ -19,7 +19,8 @@ const authenticateUser = require("./middleware/authentication");
 //routers
 const authRouter = require("./routes/AuthRoute");
 const productRouter = require("./routes/ProductRoute");
-var path = require('path');
+const orderRouter = require("./routes/OrderRoute");
+var path = require("path");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -30,10 +31,11 @@ const app = express();
 
 // extra packages
 
-
-app.use(heltmet({
-  crossOriginResourcePolicy: false,
-}));
+app.use(
+  heltmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 app.use(cors());
 app.use(xss());
 app.use(
@@ -42,11 +44,11 @@ app.use(
     max: 60,
   })
 );
-app.use(express.urlencoded({extended:true}))
-app.use(bodyParser.json({ limit: '1000mb' }));
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "1000mb" }));
+app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.send("KRYSTALLIFE Server API");
@@ -55,9 +57,10 @@ app.get("/", (req, res) => {
 //Routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/product", productRouter);
+app.use("/api/v1/order", orderRouter);
 
 app.use(notFoundMiddleware);
-app.use(errorHandlerMiddleware);
+//app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 8080;
 

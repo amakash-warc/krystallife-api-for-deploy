@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
@@ -10,7 +10,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -28,13 +28,13 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Invalid Credentials");
   }
 
-  if(user.role == 'user'){
+  if (user.role == "user") {
     throw new UnauthenticatedError("You are not authorized to login");
   }
 
   const token = user.createJWT();
 
-  res.status(StatusCodes.OK).json({name: user.name, token} );
+  res.status(StatusCodes.OK).json({ name: user.name, token });
 };
 
 module.exports = {
