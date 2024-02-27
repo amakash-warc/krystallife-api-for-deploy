@@ -1,6 +1,8 @@
 const Product = require("../models/product");
 const { StatusCodes } = require("http-status-codes");
 
+const delFile = require("../utils/delFile")
+
 
 const create = async (req, res) => {
 
@@ -23,11 +25,15 @@ const edit = async (req, res) => {
     data['price'] = Number(data['price']);
     data['stock'] = Number(data['stock']);
     console.log(req.body);
-    if(req.file){
-        data['imgUrl']=`/images/product/${req.file.filename}`
-    }
     let _id = data._id;
     delete data._id
+    if(req.file){
+        data['imgUrl']=`/images/product/${req.file.filename}`
+        let prev_prod = await Product.findById(_id);
+        let prev_img = prev_prod.imgUrl.split('/').pop();
+        delFile(prev_img,res,'product');
+    }
+    
 
     await Product.findByIdAndUpdate(_id, data);
     let newThing = await Product.findById(_id);
@@ -37,7 +43,9 @@ const edit = async (req, res) => {
 
 const destroy = async (req,res)=>{
     let id = req.params.id;
-    console.log()
+    let prev_prod = await Product.findById(_id);
+    let prev_img = prev_prod.imgUrl.split('/').pop();
+    delFile(prev_img,res,'product');
     deleted = await Product.findByIdAndDelete(id);
 
     if(deleted){

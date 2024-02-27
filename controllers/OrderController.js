@@ -2,6 +2,7 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 const Counter = require("../models/counter");
 const { StatusCodes } = require("http-status-codes");
+const sendMail = require("../utils/mailer");
 
 const create = async (req, res) => {
   let data = req.body;
@@ -33,6 +34,9 @@ const create = async (req, res) => {
   } else {
     await Counter.create({ orderCount });
   }
+
+  sendMail(order.email, 'Order Confirmation' , `Your order is placed. The order ID is ${order.orderId}. Your order will be disbursed soon`)
+
   res.status(StatusCodes.CREATED).json({ order });
 };
 
