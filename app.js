@@ -60,7 +60,7 @@ app.use("/api/v1/product", productRouter);
 app.use("/api/v1/order", orderRouter);
 
 app.use(notFoundMiddleware);
-//app.use(errorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 8080;
 
